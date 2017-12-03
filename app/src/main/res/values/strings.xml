@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">AlarmBand</string>
+
+    <!-- IN-APP DISPLAY -->
+    <string name="scan_button">Scan</string>
+
+    <string name="connected">Connected:</string>
+    <string name="connected_device">None</string>
+
+</resources>

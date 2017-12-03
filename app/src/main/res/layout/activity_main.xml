@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp"
+
+    tools:context="com.example.tom.sdp_application.MainActivity">
+
+    <!-- OVERALL VIEWED WINDOW -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- SCAN BUTTON AND DISPLAYED CONNECTION TEXT -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- SCAN BUTTON -->
+            <Button
+                android:id="@+id/scanButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/scan_button"
+                android:onClick=""/>
+
+            <!-- DISPLAYED CONNECTION TEXT -->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="75dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/connected"/>
+
+                <!-- CONNECTED DEVICE DISPLAY TEXT -->
+                <TextView
+                    android:id="@+id/connectedDevice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:singleLine="true"
+                    android:text="@string/connected_device"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- LIST OF AVAILABLE DEVICES -->
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- SCROLL CAPABILITY SHELL -->
+            <ScrollView
+                android:id="@+id/devicesScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true">
+
+                <!-- VERTICAL LISTING OF AVAILABLE DEVICES -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
