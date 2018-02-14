@@ -39,7 +39,9 @@ public class BluetoothLE extends AppCompatActivity {
     int RequestEnableBT = 1;
     Handler mHandler;
     static final long ScanPeriod = 10000;
+
     BluetoothLeScanner mLEScanner;
+
     public ScanSettings settings;
     List<ScanFilter> filters;
     BluetoothGatt mGatt;
@@ -81,7 +83,7 @@ public class BluetoothLE extends AppCompatActivity {
         }
     };
 
-    private ScanCallback mScanCallback = new ScanCallback() {
+    public ScanCallback mScanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             super.onScanResult(callbackType, result);
@@ -115,7 +117,7 @@ public class BluetoothLE extends AppCompatActivity {
 
     };
 
-    public BluetoothLE(BluetoothAdapter BluetoothAdapter,int RequestEnableBT, Handler Handler, BluetoothLeScanner LEScanner,ScanSettings settings, List<ScanFilter> filters, BluetoothGatt mGatt){
+    public BluetoothLE(BluetoothAdapter BluetoothAdapter, int RequestEnableBT, Handler Handler, BluetoothLeScanner LEScanner, ScanSettings settings, List<ScanFilter> filters, BluetoothGatt mGatt){
         this.mBluetoothAdapter = BluetoothAdapter;
         this.RequestEnableBT = RequestEnableBT;
         this.mHandler = Handler;

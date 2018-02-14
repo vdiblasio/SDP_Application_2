@@ -3,6 +3,7 @@ package com.example.tom.sdp_application;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -25,6 +26,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -41,10 +44,17 @@ public class MainActivity extends AppCompatActivity {
     private ScanSettings settings;
     private List<ScanFilter> filters;
     private BluetoothGatt mGatt;
+    private BluetoothAdapter.LeScanCallback mLeScanCallback;
 
     BluetoothLE mBluetoothLE = new BluetoothLE(mBluetoothAdapter, REQUEST_ENABLE_BT, mHandler, mLEScanner, settings, filters, mGatt);
 
 
+    public ScanCallback mScanCallback = new ScanCallback() {
+        @Override
+        public void onScanResult(int callbackType, ScanResult result) {
+            super.onScanResult(callbackType, result);
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +69,13 @@ public class MainActivity extends AppCompatActivity {
 
         final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothLE.mBluetoothAdapter = bluetoothManager.getAdapter();
+
+        final Button scanButton = findViewById(R.id.scanButton);
+        scanButton.setOnClickListener(new View.OnClickListener(){
+          public void onClick(View v){
+              mBluetoothLE.mLEScanner.startScan(mBluetoothLE.filters,mBluetoothLE.settings,mScanCallback);
+          }
+        });
     }
 
     @Override

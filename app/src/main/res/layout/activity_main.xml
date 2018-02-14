@@ -31,20 +31,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/scan_button"
-                android:onClick=""/>
+                />
 
             <!-- DISPLAYED CONNECTION TEXT -->
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_marginLeft="5dp"
-                android:layout_marginStart="5dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp">
 
                 <TextView
                     android:layout_width="75dp"
                     android:layout_height="match_parent"
-                    android:text="@string/connected"/>
+                    android:text="@string/connected" />
 
                 <!-- CONNECTED DEVICE DISPLAY TEXT -->
                 <TextView
@@ -52,7 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:singleLine="true"
-                    android:text="@string/connected_device"/>
+                    android:text="@string/connected_device" />
 
             </LinearLayout>
 
@@ -78,8 +77,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
-
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/LogReplacement"/>
                 </LinearLayout>
 
             </ScrollView>
