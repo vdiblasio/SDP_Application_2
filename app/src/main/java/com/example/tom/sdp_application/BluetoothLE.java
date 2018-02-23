@@ -62,6 +62,7 @@ public class BluetoothLE extends AppCompatActivity {
                 mBluetoothAdapter.startLeScan(mLeScanCallback);
             } else{
                 mLEScanner.startScan(filters,settings,mScanCallback);
+
             }
 
         }

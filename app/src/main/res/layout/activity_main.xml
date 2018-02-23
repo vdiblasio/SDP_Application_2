@@ -63,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- SCROLL CAPABILITY SHELL -->
+            <!-- SCROLL CAPABILITY SHELL -
             <ScrollView
                 android:id="@+id/devicesScrollView"
                 android:layout_width="match_parent"
@@ -72,7 +72,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true">
 
-                <!-- VERTICAL LISTING OF AVAILABLE DEVICES -->
+                <!- VERTICAL LISTING OF AVAILABLE DEVICES -
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -83,7 +83,13 @@
                         android:id="@+id/LogReplacement"/>
                 </LinearLayout>
 
-            </ScrollView>
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextView" />
+
+            </ScrollView> -->
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
