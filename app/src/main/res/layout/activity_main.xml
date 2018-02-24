@@ -1,98 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
-    android:paddingBottom="10dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="10dp"
+    <Button
+        android:id="@+id/send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="Send"
+        android:onClick="sendClick"/>
 
-    tools:context="com.example.tom.sdp_application.MainActivity">
+    <EditText
+        android:id="@+id/input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/send"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"/>
 
-    <!-- OVERALL VIEWED WINDOW -->
-    <LinearLayout
+    <TextView
+        android:id="@+id/messages"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/send"
+        android:layout_above="@+id/newline"
+        android:fontFamily="monospace"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:scrollbars="vertical"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:gravity="bottom"/>
 
-        <!-- SCAN BUTTON AND DISPLAYED CONNECTION TEXT -->
-        <LinearLayout
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Insert NewLine on Send"
+        android:id="@+id/newline"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/scrollView" />
 
-            <!-- SCAN BUTTON -->
-            <Button
-                android:id="@+id/scanButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/scan_button"
-                />
-
-            <!-- DISPLAYED CONNECTION TEXT -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginStart="5dp">
-
-                <TextView
-                    android:layout_width="75dp"
-                    android:layout_height="match_parent"
-                    android:text="@string/connected" />
-
-                <!-- CONNECTED DEVICE DISPLAY TEXT -->
-                <TextView
-                    android:id="@+id/connectedDevice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:singleLine="true"
-                    android:text="@string/connected_device" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <!-- LIST OF AVAILABLE DEVICES -->
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipeRefreshLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <!-- SCROLL CAPABILITY SHELL -
-            <ScrollView
-                android:id="@+id/devicesScrollView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true">
-
-                <!- VERTICAL LISTING OF AVAILABLE DEVICES -
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/LogReplacement"/>
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="TextView" />
-
-            </ScrollView> -->
-
-        </android.support.v4.widget.SwipeRefreshLayout>
-
-    </LinearLayout>
-
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

@@ -10,6 +10,8 @@ import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.content.Context;
+import android.bluetooth.le.BluetoothLeScanner;
+
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -346,7 +348,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
                 if (cb != null ) {
                     cb.onReceive(uart, rx);
                 }
-            }
+        }
         }
 
         private void notifyOnDeviceFound(BluetoothDevice device) {
