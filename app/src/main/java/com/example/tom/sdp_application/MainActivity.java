@@ -236,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements BluetoothLeUart.C
         });
     }
 
+
     public void onConnected(BluetoothLeUart uart) {
         // Called when UART device is connected and ready to send/receive data.
         System.out.println("Connected!");
