@@ -1,6 +1,5 @@
-// Based on ExpandedHeightGridView from http://stackoverflow.com/questions/8481844/gridview-height-gets-cut
-
 package com.example.tom.sdp_application;
+// Based on ExpandedHeightGridView from http://stackoverflow.com/questions/8481844/gridview-height-gets-cut
 
 import android.content.Context;
 import android.util.AttributeSet;
