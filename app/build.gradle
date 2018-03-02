@@ -17,11 +17,28 @@ android {
         }
     }
 }
-
+repositories {
+    maven { url "https://repo.eclipse.org/content/repositories/paho-releases/" }
+    maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
+    google()
+}
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    compile(group: 'org.eclipse.paho', name: 'org.eclipse.paho.android.service', version: '1.0.2') {
+        exclude module: 'support-v4'
+    }
+
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.larswerkman:HoloColorPicker:1.4'
+    compile 'com.android.support:design:26.1.0'
+
+    compile 'com.google.android.gms:play-services-analytics:11.6.0'
+    compile 'com.google.android.gms:play-services-location:11.6.0'
+    compile 'com.google.android.gms:play-services-vision:11.6.0'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'

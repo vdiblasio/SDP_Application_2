@@ -3,6 +3,7 @@ package com.example.tom.sdp_application;
 /**
  * Created by Vincent DiBlasio on 12/3/2017.
  */
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.annotation.TargetApi;
@@ -37,7 +38,8 @@ import java.util.List;
 public class BluetoothLE extends AppCompatActivity {
     BluetoothAdapter mBluetoothAdapter;
     int RequestEnableBT = 1;
-    Handler mHandler;
+
+    Handler mHandler = new Handler();
     static final long ScanPeriod = 10000;
 
     BluetoothLeScanner mLEScanner;
@@ -88,6 +90,7 @@ public class BluetoothLE extends AppCompatActivity {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             super.onScanResult(callbackType, result);
+            connectToDevice(result.getDevice());
         }
     };
 

@@ -45,6 +45,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
         private Context context;
         private WeakHashMap<Callback, Object> callbacks;
         private BluetoothAdapter adapter;
+        private BluetoothLeScanner leAdapter;
         private BluetoothGatt gatt;
         private BluetoothGattCharacteristic tx;
         private BluetoothGattCharacteristic rx;
@@ -189,11 +190,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
                     // Connected to device, start discovering services.
                     if (!gatt.discoverServices()) {
                         // Error starting service discovery.
+                        System.out.println("starting service discovery");
                         connectFailure();
                     }
                 }
                 else {
                     // Error connecting to device.
+                    System.out.println("connecting to device");
                     connectFailure();
                 }
             }
@@ -210,6 +213,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
             super.onServicesDiscovered(gatt, status);
             // Notify connection failure if service discovery failed.
             if (status == BluetoothGatt.GATT_FAILURE) {
+                System.out.println("Service discovery failed");
                 connectFailure();
                 return;
             }
@@ -241,6 +245,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
             if (!gatt.setCharacteristicNotification(rx, true)) {
                 // Stop if the characteristic notification setup failed.
                 connectFailure();
+                System.out.println("characteristic notification setup failed");
                 return;
             }
             // Next update the RX characteristic's client descriptor to enable notifications.
@@ -248,12 +253,19 @@ import java.util.concurrent.ConcurrentLinkedQueue;
             if (desc == null) {
                 // Stop if the RX characteristic has no client descriptor.
                 connectFailure();
+                System.out.println("no descriptor");
                 return;
             }
             desc.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
             if (!gatt.writeDescriptor(desc)) {
                 // Stop if the client descriptor could not be written.
                 connectFailure();
+                //System.out.println(desc.getValue());
+                System.out.println(gatt.getDevice());
+                System.out.println(desc.getCharacteristic());
+                System.out.println(desc.getCharacteristic().getService());
+                //System.out.println(desc.getCharacteristic().getService().getDevice());
+                System.out.println("client descriptor could not be written");
                 return;
             }
             // Notify of connection completion.
@@ -314,7 +326,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
                 // Prevent connections to future found devices.
                 connectFirst = false;
                 // Connect to device.
-                gatt = device.connectGatt(context, true, this);
+                gatt = device.connectGatt(this.context, true, this);
             }
         }
 
