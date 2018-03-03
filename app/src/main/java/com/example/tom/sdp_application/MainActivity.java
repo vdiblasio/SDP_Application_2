@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.BluetoothGattService;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.DialogInterface;
@@ -701,7 +702,9 @@ public class MainActivity extends AppCompatActivity implements BleManager.BleMan
 
 
             if (mSelectedDeviceData.type == BluetoothDeviceData.kType_Uart) {      // if is uart, show all the available activities
-                showChooseDeviceServiceDialog(mSelectedDeviceData);
+                //showChooseDeviceServiceDialog(mSelectedDeviceData);
+                mComponentToStartWhenConnected = UartActivity.class;
+                launchComponentActivity();
             } else {                          // if no uart, then go directly to info
                 Log.d(TAG, "No UART service found. Go to InfoActivity");
             }
@@ -717,7 +720,7 @@ public class MainActivity extends AppCompatActivity implements BleManager.BleMan
         }
         Toast toast = Toast.makeText(this, "CONNECTED :D", Toast.LENGTH_SHORT);
         toast.show();
-        stopScanning();
+       // stopScanning();
 
     }
 
@@ -796,6 +799,7 @@ public class MainActivity extends AppCompatActivity implements BleManager.BleMan
                         switch (kComponentsNameIds[which]) {
                             case R.string.scan_connectservice_uart: {           // Uart
                                 mComponentToStartWhenConnected = UartActivity.class;
+                                launchComponentActivity();
                                 break;
                             }
                         }
@@ -1364,6 +1368,33 @@ public class MainActivity extends AppCompatActivity implements BleManager.BleMan
             stopScanning();
         } else {
             startScan(null);
+        }
+    }
+
+    private void launchComponentActivity() {
+        // Enable generic attribute service
+        final BluetoothGattService genericAttributeService = mBleManager.getGattService(kGenericAttributeService);
+        if (genericAttributeService != null) {
+            Log.d(TAG, "kGenericAttributeService found. Check if kServiceChangedCharacteristic exists");
+
+            final UUID characteristicUuid = UUID.fromString(kServiceChangedCharacteristic);
+            final BluetoothGattCharacteristic dataCharacteristic = genericAttributeService.getCharacteristic(characteristicUuid);
+            if (dataCharacteristic != null) {
+                Log.d(TAG, "kServiceChangedCharacteristic exists. Enable indication");
+                mBleManager.enableIndication(genericAttributeService, kServiceChangedCharacteristic, true);
+            } else {
+                Log.d(TAG, "Skip enable indications for kServiceChangedCharacteristic. Characteristic not found");
+            }
+        } else {
+            Log.d(TAG, "Skip enable indications for kServiceChangedCharacteristic. kGenericAttributeService not found");
+        }
+
+        // Launch activity
+        showConnectionStatus(false);
+        if (mComponentToStartWhenConnected != null) {
+            Log.d(TAG, "Start component:" + mComponentToStartWhenConnected);
+            Intent intent = new Intent(MainActivity.this, mComponentToStartWhenConnected);
+            startActivityForResult(intent, kActivityRequestCode_ConnectedActivity);
         }
     }
 

@@ -13,6 +13,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.telephony.SmsManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
@@ -699,6 +700,14 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
                 mDataBufferLastSize = mDataBuffer.size();
                 mBufferTextView.setText(mTextSpanBuffer);
                 mBufferTextView.setSelection(0, mTextSpanBuffer.length());        // to automatically scroll to the end
+                System.out.println("motion?");
+                //sms stuff
+                /*final SmsManager smsManagger = SmsManager.getDefault();
+                //TODO DON'T PUSH WITH A PHONE NUMBER
+                final String num = "";
+                smsManagger.sendTextMessage(num, null, "I am in need of assistance", null, null);
+*/
+
             }
         }
     }
