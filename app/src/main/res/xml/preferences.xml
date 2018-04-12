@@ -2,6 +2,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
 
+    <EditTextPreference
+        android:key="contact_phone_number"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="choose the number to text when motion is detected"
+        android:title="Contact Number" />
     <PreferenceCategory
         android:key="pref_key_connectivity_settings"
         android:title="@string/settings_category_connectivity">

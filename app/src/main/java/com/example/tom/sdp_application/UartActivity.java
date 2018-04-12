@@ -7,13 +7,16 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.telephony.SmsManager;
+import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
@@ -32,6 +35,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import java.io.File;
 
 //import com.adafruit.bluefruit.le.connect.app.settings.ConnectedSettingsActivity;
 //import com.adafruit.bluefruit.le.connect.app.settings.MqttUartSettingsActivity;
@@ -39,6 +43,7 @@ import android.widget.TextView;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -57,6 +62,11 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
     private static final int kActivityRequestCode_ConnectedSettingsActivity = 0;
     private static final int kActivityRequestCode_MqttSettingsActivity = 1;
 
+
+    //Files
+    File file = new File(getFilesDir(), "contactNum");
+    FileOutputStream outputStream;
+
     // Constants
     private final static String kPreferences = "UartActivity_prefs";
     private final static String kPreferences_eol = "eol";
@@ -64,7 +74,8 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
     private final static String kPreferences_echo = "echo";
     private final static String kPreferences_asciiMode = "ascii";
     private final static String kPreferences_timestampDisplayMode = "timestampdisplaymode";
-
+    PowerManager mgr;
+    PowerManager.WakeLock wakeLock;
     // Colors
     private int mTxColor;
     private int mRxColor;
@@ -84,6 +95,7 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
     private Runnable mUIRefreshTimerRunnable = new Runnable() {
         @Override
         public void run() {
+
             if (isUITimerRunning) {
                 updateTextDataUI();
                 // Log.d(TAG, "updateDataUI");
@@ -99,6 +111,7 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
     private boolean mIsEchoEnabled;
     private boolean mIsEolEnabled;
     private int mEolCharactersId;
+    private String phoneNumber = R.xml.preferences.contact_phone_number;
 
     private volatile SpannableStringBuilder mTextSpanBuffer;
     private volatile ArrayList<UartDataChunk> mDataBuffer;
@@ -113,11 +126,15 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uart);
 
         mBleManager = BleManager.getInstance(this);
         restoreRetainedDataFragment();
+
+        mgr = (PowerManager)this.getApplicationContext().getSystemService(Context.POWER_SERVICE);
+        wakeLock = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakeLock");
 
         // Get default theme colors
         TypedValue typedValue = new TypedValue();
@@ -189,7 +206,7 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
     @Override
     public void onResume() {
         super.onResume();
-
+        //wakeLock.release();
         // Setup listeners
         mBleManager.setBleListener(this);
 
@@ -208,6 +225,7 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
     @Override
     public void onPause() {
         super.onPause();
+        wakeLock.acquire(1000000000);
 
         //Log.d(TAG, "remove ui timer");
         isUITimerRunning = false;
@@ -223,6 +241,7 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
         editor.putBoolean(kPreferences_timestampDisplayMode, mIsTimestampDisplayMode);
 
         editor.apply();
+
     }
 
     @Override
@@ -373,6 +392,8 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+
+       // AlertDialog.Builder builder = new AlertDialog.Builder(this);
         getMenuInflater().inflate(R.menu.menu_uart, menu);
 
         // Mqtt
@@ -413,6 +434,52 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
         MenuItem eolMenuItem = menu.findItem(R.id.action_eol);
         eolMenuItem.setTitle(R.string.uart_action_eol);
         eolMenuItem.setChecked(mIsEolEnabled);
+
+        //PHONENUMBER
+        MenuItem PhoneNumber = menu.findItem(R.id.phoneNumber);
+        PhoneNumber.setOnMenuItemClickListener(
+                new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(UartActivity.this);
+
+                        final EditText input = new EditText(UartActivity.this);
+                        input.setInputType(InputType.TYPE_CLASS_TEXT);
+                        builder.setView(input);
+
+                        //TODO replace text with string resources (R.string.xx)
+                        builder.setMessage("Enter number of selected contact")
+                                .setTitle("Change Emergency Contact");
+
+                        //set action on POSITIVE (ok) button press
+                        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //collect phone number string, check for validity
+                                String newNum = input.getText().toString();
+                                //make sure that this is legit
+
+                                phoneNumber = newNum;
+                            }
+                        });
+
+
+                        //action for NEGATIVE (cancel) button press
+                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //don't change number
+                                dialog.cancel();
+                            }
+                        });
+
+                        builder.show();
+
+                        return true;
+                    }
+                }
+
+        );
 
         // Eol Characters
         MenuItem eolModeMenuItem = menu.findItem(R.id.action_eolmode);
@@ -702,11 +769,10 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
                 mBufferTextView.setSelection(0, mTextSpanBuffer.length());        // to automatically scroll to the end
                 System.out.println("motion?");
                 //sms stuff
-                /*final SmsManager smsManagger = SmsManager.getDefault();
+                final SmsManager smsManagger = SmsManager.getDefault();
                 //TODO DON'T PUSH WITH A PHONE NUMBER
-                final String num = "";
-                smsManagger.sendTextMessage(num, null, "I am in need of assistance", null, null);
-*/
+
+                smsManagger.sendTextMessage(phoneNumber, null, "I am in need of assistance", null, null);
 
             }
         }

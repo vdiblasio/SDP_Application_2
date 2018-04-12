@@ -16,7 +16,8 @@ import android.provider.Settings;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -140,6 +141,8 @@ public class MainActivity extends AppCompatActivity implements BleManager.BleMan
             public void onGroupExpand(int groupPosition) {
             }
         });
+
+
 
 
         mNoDevicesTextView = (TextView) findViewById(R.id.nodevicesTextView);
@@ -702,9 +705,10 @@ public class MainActivity extends AppCompatActivity implements BleManager.BleMan
 
 
             if (mSelectedDeviceData.type == BluetoothDeviceData.kType_Uart) {      // if is uart, show all the available activities
-                //showChooseDeviceServiceDialog(mSelectedDeviceData);
-                mComponentToStartWhenConnected = UartActivity.class;
-                launchComponentActivity();
+                showChooseDeviceServiceDialog(mSelectedDeviceData);
+
+                /*mComponentToStartWhenConnected = UartActivity.class;
+                launchComponentActivity();*/
             } else {                          // if no uart, then go directly to info
                 Log.d(TAG, "No UART service found. Go to InfoActivity");
             }
@@ -786,8 +790,11 @@ public class MainActivity extends AppCompatActivity implements BleManager.BleMan
     }
     //TODO CHANGE THIS TO ONLY CONNECT VIA UART
     private void showChooseDeviceServiceDialog(final BluetoothDeviceData deviceData) {
+        mComponentToStartWhenConnected = UartActivity.class;
+        connect(deviceData.device);            // First connect to the device, and when connected go to selected activity
+        launchComponentActivity();
         // Prepare dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+       /* AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String title = String.format(getString(R.string.scan_connectto_dialog_title_format), deviceData.getNiceName());
         String[] items = new String[kComponentsNameIds.length];
         for (int i = 0; i < kComponentsNameIds.length; i++)
@@ -812,7 +819,7 @@ public class MainActivity extends AppCompatActivity implements BleManager.BleMan
 
         // Show dialog
         AlertDialog dialog = builder.create();
-        dialog.show();
+        dialog.show();*/
     }
 
     private class PeripheralList {

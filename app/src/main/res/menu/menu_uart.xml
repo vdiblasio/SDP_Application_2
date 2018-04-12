@@ -7,14 +7,23 @@
         android:id="@+id/action_mqttsettings"
         android:icon="@drawable/mqtt_disconnected"
         android:title="@string/action_mqttsettings"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/phoneNumber"
+        android:icon="@drawable/ic_settings_white_24dp"
+        android:title="@string/action_mqttsettings"
+        app:showAsAction="always"
+        />
 
 
     <item
         android:id="@+id/action_help"
         android:icon="@drawable/ic_info_outline_menu"
         android:title="@string/action_info"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        android:visible="false"/>
 
 
     <group android:id="@+id/uartControls">
@@ -22,8 +31,8 @@
         <item
             android:id="@+id/action_displaymode"
             android:title="@string/uart_action_displaymode_format"
-            app:showAsAction="never">
-
+            app:showAsAction="never"
+            android:visible="false">
             <menu>
                 <group
                     android:id="@+id/displayMode"
@@ -43,7 +52,8 @@
         <item
             android:id="@+id/action_datamode"
             android:title="@string/uart_action_datamode_format"
-            app:showAsAction="never">
+            app:showAsAction="never"
+            android:visible="false">
 
             <menu>
                 <group
@@ -52,12 +62,14 @@
                     <item
                         android:id="@+id/action_datamode_ascii"
                         android:title="@string/uart_format_ascii"
-                        app:showAsAction="never" />
+                        app:showAsAction="never"
+                        android:visible="false"/>
 
                     <item
                         android:id="@+id/action_datamode_hex"
                         android:title="@string/uart_format_hexadecimal"
-                        app:showAsAction="never" />
+                        app:showAsAction="never"
+                        android:visible="false"/>
                 </group>
             </menu>
         </item>
@@ -68,17 +80,20 @@
             <item
                 android:id="@+id/action_echo"
                 android:title="@string/uart_action_echo"
-                app:showAsAction="never" />
+                app:showAsAction="never"
+                android:visible="false"/>
             <item
                 android:id="@+id/action_eol"
                 android:title="@string/uart_action_eol"
-                app:showAsAction="never" />
+                app:showAsAction="never"
+                android:visible="false"/>
         </group>
 
         <item
             android:id="@+id/action_eolmode"
             android:title="@string/uart_action_eolmode_format"
-            app:showAsAction="never">
+            app:showAsAction="never"
+            android:visible="false">
 
             <menu>
                 <group
@@ -87,19 +102,23 @@
                     <item
                         android:id="@+id/action_eolmode_n"
                         android:title="@string/uart_eolmode_n"
-                        app:showAsAction="never" />
+                        app:showAsAction="never"
+                        android:visible="false"/>
                     <item
                         android:id="@+id/action_eolmode_r"
                         android:title="@string/uart_eolmode_r"
-                        app:showAsAction="never" />
+                        app:showAsAction="never"
+                        android:visible="false"/>
                     <item
                         android:id="@+id/action_eolmode_nr"
                         android:title="@string/uart_eolmode_nr"
-                        app:showAsAction="never" />
+                        app:showAsAction="never"
+                        android:visible="false"/>
                     <item
                         android:id="@+id/action_eolmode_rn"
                         android:title="@string/uart_eolmode_rn"
-                        app:showAsAction="never" />
+                        app:showAsAction="never"
+                        android:visible="false"/>
                 </group>
             </menu>
         </item>
@@ -111,12 +130,14 @@
             android:id="@+id/action_connected_settings"
             android:icon="@drawable/ic_settings_white_24dp"
             android:title="@string/action_firmwareupdates"
-            app:showAsAction="never" />
+            app:showAsAction="never"
+            android:visible="false"/>
 
         <item
             android:id="@+id/action_refreshcache"
             android:title="@string/action_refreshcache"
-            app:showAsAction="never" />
+            app:showAsAction="never"
+            android:visible="false"/>
 
     </group>
 </menu>
