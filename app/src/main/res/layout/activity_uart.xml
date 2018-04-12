@@ -11,13 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#cccccc"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <EditText
                 android:id="@+id/sendEditText"
@@ -27,7 +29,8 @@
                 android:inputType="textNoSuggestions|textVisiblePassword"
                 android:scrollbarAlwaysDrawVerticalTrack="true"
                 android:scrollbars="vertical"
-                android:singleLine="false" />
+                android:singleLine="false"
+                android:visibility="gone"/>
 
             <Button
                 android:layout_width="wrap_content"
@@ -64,7 +67,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@id/sendLayout"
         android:layout_alignParentTop="true"
         android:orientation="vertical">
@@ -75,7 +78,7 @@
         <ListView
             android:id="@+id/bufferListView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#cccccc" />
 
@@ -88,7 +91,8 @@
             android:cursorVisible="false"
             android:gravity="top"
             android:scrollbarFadeDuration="0"
-            android:textColorHighlight="#ffffff" />
+            android:textColorHighlight="#ffffff"
+            android:visibility="gone"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -102,7 +106,8 @@
                 android:layout_weight="1"
                 android:onClick="onClickCopy"
                 android:text="@string/uart_copy"
-                android:textColor="@drawable/default_textcolor" />
+                android:textColor="@drawable/default_textcolor"
+                android:visibility="gone"/>
 
             <Button
                 style="?android:attr/borderlessButtonStyle"
@@ -111,7 +116,8 @@
                 android:layout_weight="1"
                 android:onClick="onClickShare"
                 android:text="@string/uart_share"
-                android:textColor="@drawable/default_textcolor" />
+                android:textColor="@drawable/default_textcolor"
+                android:visibility="gone"/>
 
             <Button
                 style="?android:attr/borderlessButtonStyle"
@@ -120,7 +126,8 @@
                 android:layout_weight="1"
                 android:onClick="onClickClear"
                 android:text="@string/uart_clear"
-                android:textColor="@drawable/default_textcolor" />
+                android:textColor="@drawable/default_textcolor"
+                android:visibility="gone"/>
 
         </LinearLayout>
     </LinearLayout>
