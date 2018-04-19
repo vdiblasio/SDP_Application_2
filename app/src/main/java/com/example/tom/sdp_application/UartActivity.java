@@ -160,7 +160,7 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
                 ex.printStackTrace();
             }
         }
-
+    //test
         AlertDialog.Builder builder = new AlertDialog.Builder(UartActivity.this);
 
         final EditText input = new EditText(UartActivity.this);
