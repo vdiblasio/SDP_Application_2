@@ -83,7 +83,35 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="#cccccc" />
+            android:background="#cccccc"
+            android:visibility="gone"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#cccccc">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5sp"
+                android:id="@+id/phoneNumberDisplay">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:textStyle="bold"
+                    android:text="Active Phone Number"
+                    android:textSize="20sp"/>
+                <TextView
+                    android:id="@+id/activePhoneNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text=""
+                    android:textSize="20sp"/>
+            </RelativeLayout>
+
+        </RelativeLayout>
 
         <EditText
             android:id="@+id/bufferTextView"
