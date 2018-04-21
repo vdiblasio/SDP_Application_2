@@ -33,8 +33,10 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,6 +93,8 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
     private Handler mMqttMenuItemAnimationHandler;
     private TextView mSentBytesTextView;
     private TextView mReceivedBytesTextView;
+    private TextView mActivePhoneNumber;                //textview for number display
+    private RelativeLayout mPhoneNumberDisplay;         //holds textview for active number and title
 
     // UI TextBuffer (refreshing the text buffer is managed with a timer because a lot of changes can arrive really fast and could stall the main thread)
     private Handler mUIRefreshTimerHandler = new Handler();
@@ -126,6 +130,10 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
 
     private int maxPacketsToPaintAsText;
 
+    //More stuff
+    AlertDialog.Builder builder = new AlertDialog.Builder(UartActivity.this);
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -134,6 +142,8 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
 
         File fileDir = getFilesDir();
         File file = new File(fileDir,"contactNumber");
+
+
 
         mBleManager = BleManager.getInstance(this);
         restoreRetainedDataFragment();
@@ -160,25 +170,82 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
                 ex.printStackTrace();
             }
         }
-    //test
-        AlertDialog.Builder builder = new AlertDialog.Builder(UartActivity.this);
 
+        //My UI stuff
+        mActivePhoneNumber = (TextView) findViewById(R.id.activePhoneNumber);
+        mPhoneNumberDisplay = (RelativeLayout) findViewById(R.id.phoneNumberDisplay);
+
+        //set up action listener for phone number display
+
+        mActivePhoneNumber.setText(phoneNumber);
+
+
+        //Set up the dialog builder here, should be able to just show it whenever
         final EditText input = new EditText(UartActivity.this);
         input.setText(phoneNumber);
         input.setInputType(InputType.TYPE_CLASS_PHONE);
         builder.setView(input);
 
-        //TODO replace text with string resources (R.string.xx)
         builder.setMessage("Enter number of selected contact")
-                .setTitle("Change Emergency Contact");
+                .setTitle("Change Emergency Contact")
+                .setPositiveButton(android.R.string.ok, null)
+                .setCancelable(false);
 
+        final AlertDialog dialog = builder.create();
+        //changing the way we do a the listener for the button so that we can only dismiss the dialog if it's a valid number
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(final DialogInterface dialog) {
+                Button b = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                b.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view){
+                        String newNum = input.getText().toString();
+                        if(newNum.length() != 10){
+                                //DONT DISMISS IF INVALID
+                        }
+                        else {
+                            //valid length number, we will accept this
+                            if (newNum != phoneNumber) {
+                                //update textviews
+                                input.setText(newNum);
+                                mActivePhoneNumber.setText(newNum);
+                                FileOutputStream outputStream;
+                                try {
+                                    outputStream = openFileOutput("contactNumber", Context.MODE_PRIVATE);
+                                    outputStream.write(newNum.getBytes());
+                                    outputStream.close();
+
+                                } catch (Exception e) {
+                                    Toast.makeText(UartActivity.this, "You should never see this",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+
+                                //make sure that this is legit
+
+                                phoneNumber = newNum;
+                            }
+                            dialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
+
+
+
+/*
         //set action on POSITIVE (ok) button press
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //collect phone number string, check for validity
                 String newNum = input.getText().toString();
+
                 if(newNum != phoneNumber) {
+                    //update textviews
+                    input.setText(newNum);
+                    mActivePhoneNumber.setText(newNum);
                     FileOutputStream outputStream;
                     try {
                         outputStream = openFileOutput("contactNumber", Context.MODE_PRIVATE);
@@ -196,8 +263,15 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
                 }
             }
         });
-        builder.show();
 
+*/
+
+        mPhoneNumberDisplay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.show();
+            }
+        });
 
 
         // Get default theme colors
@@ -264,6 +338,12 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
         mMqttManager = MqttManager.getInstance(this);
         if (MqttSettings.getInstance(this).isConnected()) {
             mMqttManager.connectFromSavedSettings(this);
+        }
+
+        //Moved dialog show to end of create so we do everything else first, might help with some issues maybe?
+        //builder.show();
+        if(phoneNumber.equals("")){
+            builder.show();
         }
     }
 
