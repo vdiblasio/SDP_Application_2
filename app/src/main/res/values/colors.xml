@@ -3,6 +3,7 @@
     <color name="colorPrimary">#bbee22</color>
     <color name="colorPrimaryDark">#91b91b</color>
     <color name="colorAccent">#ee7700</color>
+    <color name="colorBlack">#000000</color>
 
     <drawable name="default_background">#333333</drawable>
     <drawable name="default_textcolor">#B8B8B8</drawable>

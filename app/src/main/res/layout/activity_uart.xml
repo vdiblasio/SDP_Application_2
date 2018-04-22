@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
@@ -68,6 +69,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="35dp"
         android:layout_above="@id/sendLayout"
         android:layout_alignParentTop="true"
         android:orientation="vertical">
@@ -78,7 +81,7 @@
         <ListView
             android:id="@+id/bufferListView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="#cccccc" />
 
@@ -131,5 +134,15 @@
 
         </LinearLayout>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@color/colorBlack"
+        android:visibility="visible"
+        android:onClick="imageViewClick"/>
 
 </RelativeLayout>

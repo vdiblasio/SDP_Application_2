@@ -1,5 +1,6 @@
 package com.example.tom.sdp_application;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -12,9 +13,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.telephony.SmsManager;
 import android.text.InputType;
@@ -34,6 +37,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -126,14 +130,27 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
 
     private int maxPacketsToPaintAsText;
 
+    //SMS
+    int smsType;
+
+    //UI
+    int uiOptions;
+    int newUiOptions;
+    int check;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_uart);
+
+
 
         File fileDir = getFilesDir();
         File file = new File(fileDir,"contactNumber");
+
+
 
         mBleManager = BleManager.getInstance(this);
         restoreRetainedDataFragment();
@@ -270,6 +287,15 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
     @Override
     public void onResume() {
         super.onResume();
+
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         //wakeLock.release();
         // Setup listeners
         mBleManager.setBleListener(this);
@@ -455,13 +481,14 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
     // region Menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        check = 0;
         // Inflate the menu; this adds items to the action bar if it is present.
 
        // AlertDialog.Builder builder = new AlertDialog.Builder(this);
         getMenuInflater().inflate(R.menu.menu_uart, menu);
 
         // Mqtt
-        mMqttMenuItem = menu.findItem(R.id.action_mqttsettings);
+        //mMqttMenuItem = menu.findItem(R.id.action_mqttsettings);
         mMqttMenuItemAnimationHandler = new Handler();
         mMqttMenuItemAnimationRunnable.run();
 
@@ -563,6 +590,52 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
 
         );
 
+        uiOptions = this.getWindow().getDecorView().getSystemUiVisibility();
+        newUiOptions = uiOptions;
+
+        MenuItem showShell = menu.findItem(R.id.showShell);
+        final ImageView hideShell = findViewById(R.id.imageView);
+        showShell.setOnMenuItemClickListener(
+                new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if(hideShell.getVisibility() == View.VISIBLE){
+                            hideShell.setVisibility(View.GONE);
+
+                            View decorView = getWindow().getDecorView();
+                            decorView.setSystemUiVisibility(
+                                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                            check = 1;
+                            return true;
+
+                        }
+
+                        else{
+                            hideShell.setVisibility(View.VISIBLE);
+                            View decorView = getWindow().getDecorView();
+                            decorView.setSystemUiVisibility(
+                                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                            check = 1;
+                            return true;
+                        }
+
+                    }
+                }
+        );
+        if (check == 1)
+        this.getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
+
+
         // Eol Characters
         MenuItem eolModeMenuItem = menu.findItem(R.id.action_eolmode);
         eolModeMenuItem.setTitle(String.format(getString(R.string.uart_action_eolmode_format), getString(getEolCharactersStringId())));
@@ -639,10 +712,10 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
                 }
                 break;
 
-            case R.id.action_mqttsettings:
-                Intent intent = new Intent(this, MqttUartSettingsActivity.class);
-                startActivityForResult(intent, kActivityRequestCode_MqttSettingsActivity);
-                break;
+//            case R.id.action_mqttsettings:
+//                Intent intent = new Intent(this, MqttUartSettingsActivity.class);
+//                startActivityForResult(intent, kActivityRequestCode_MqttSettingsActivity);
+//                break;
 
             case R.id.action_displaymode_timestamp:
                 setDisplayFormatToTimestamp(true);
@@ -740,6 +813,8 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
 
     }
 */
+
+
     @Override
     public void onDisconnected() {
         super.onDisconnected();
@@ -772,7 +847,7 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
                             final String currentDateTimeString = DateFormat.getTimeInstance().format(new Date(dataChunk.getTimestamp()));
                             final String formattedData = mShowDataInHexFormat ? BleUtils.bytesToHex2(bytes) : BleUtils.bytesToText(bytes, true);
 
-                            mBufferListAdapter.add(new TimestampData("[" + currentDateTimeString + "] RX: " + formattedData, mRxColor));
+                            mBufferListAdapter.add(new TimestampData("[" + currentDateTimeString + "] RX: " + formattedData + '\n', mRxColor));
                             //mBufferListAdapter.add("[" + currentDateTimeString + "] RX: " + formattedData);
                             //mBufferListView.smoothScrollToPosition(mBufferListAdapter.getCount() - 1);
                             mBufferListView.setSelection(mBufferListAdapter.getCount());
@@ -843,7 +918,13 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
                     final boolean isRX = dataChunk.getMode() == UartDataChunk.TRANSFERMODE_RX;
                     final byte[] bytes = dataChunk.getData();
                     final String formattedData = mShowDataInHexFormat ? BleUtils.bytesToHex2(bytes) : BleUtils.bytesToText(bytes, true);
-                    addTextToSpanBuffer(mTextSpanBuffer, formattedData, isRX ? mRxColor : mTxColor);
+                    addTextToSpanBuffer(mTextSpanBuffer, formattedData + "\n", isRX ? mRxColor : mTxColor);
+                    if (formattedData.charAt(4) =='p' || formattedData.charAt(3) == 'p' || formattedData.charAt(2) == 'p'){
+                        smsType = 0;
+                    }
+                    else{
+                        smsType = 1;
+                    }
                 }
 
                 mDataBufferLastSize = mDataBuffer.size();
@@ -853,8 +934,11 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
                 //sms stuff
                 final SmsManager smsManagger = SmsManager.getDefault();
                 //TODO DON'T PUSH WITH A PHONE NUMBER
+                if(smsType ==1)
+                smsManagger.sendTextMessage(phoneNumber, null, "I am in need of immediate assistance(motion detected)", null, null);
+                else
+                    smsManagger.sendTextMessage(phoneNumber, null, "I am in need of assistance(buton pressed)", null, null);
 
-                smsManagger.sendTextMessage(phoneNumber, null, "I am in need of assistance", null, null);
 
             }
         }
@@ -883,6 +967,18 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
             mTextSpanBuffer.clear();
             mBufferTextView.setText("");
         }
+    }
+
+    public void imageViewClick(View view) {
+        ImageView imageView =  findViewById(R.id.imageView);
+        imageView.setVisibility(View.GONE);
+
+        uiOptions = this.getWindow().getDecorView().getSystemUiVisibility();
+        newUiOptions = uiOptions;
+        newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
+        newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        this.getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
     }
 
 

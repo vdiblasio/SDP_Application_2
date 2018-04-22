@@ -4,11 +4,11 @@
     tools:context="com.adafruit.bluefruit.le.connect.app.UartActivity">
 
     <item
-        android:id="@+id/action_mqttsettings"
-        android:icon="@drawable/mqtt_disconnected"
+        android:id="@+id/showShell"
+        android:icon="@drawable/pad_button_exit"
         android:title="@string/action_mqttsettings"
         app:showAsAction="always"
-        android:visible="false"/>
+        android:visible="true"/>
 
     <item
         android:id="@+id/phoneNumber"
