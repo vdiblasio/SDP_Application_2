@@ -303,9 +303,9 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
         // Get default theme colors
         TypedValue typedValue = new TypedValue();
         Resources.Theme theme = getTheme();
-        theme.resolveAttribute(R.attr.colorPrimaryDark, typedValue, true);
+        theme.resolveAttribute(R.drawable.default_infotextcolor, typedValue, true);
         mTxColor = typedValue.data;
-        theme.resolveAttribute(R.attr.colorControlActivated, typedValue, true);
+        theme.resolveAttribute(R.drawable.default_infotextcolor, typedValue, true);
         mRxColor = typedValue.data;
 
         // UI
