@@ -95,6 +95,7 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
     private TextView mReceivedBytesTextView;
     private TextView mActivePhoneNumber;                //textview for number display
     private RelativeLayout mPhoneNumberDisplay;         //holds textview for active number and title
+    private Button mViewMessaageLog;
 
     // UI TextBuffer (refreshing the text buffer is managed with a timer because a lot of changes can arrive really fast and could stall the main thread)
     private Handler mUIRefreshTimerHandler = new Handler();
@@ -131,7 +132,7 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
     private int maxPacketsToPaintAsText;
 
     //More stuff
-    AlertDialog.Builder builder = new AlertDialog.Builder(UartActivity.this);
+    AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
 
 
     @Override
@@ -172,8 +173,24 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
         }
 
         //My UI stuff
+
+        //setting up the 'display log' button
+        mViewMessaageLog = (Button) findViewById(R.id.viewMessageLog);
+        mViewMessaageLog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mViewMessaageLog.getVisibility() == View.VISIBLE){
+                    mViewMessaageLog.setVisibility(View.INVISIBLE);
+                }
+                else{
+                    mViewMessaageLog.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         mActivePhoneNumber = (TextView) findViewById(R.id.activePhoneNumber);
         mPhoneNumberDisplay = (RelativeLayout) findViewById(R.id.phoneNumberDisplay);
+
 
         //set up action listener for phone number display
 
@@ -196,12 +213,14 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(final DialogInterface dialog) {
-                Button b = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                Button b = ((AlertDialog)dialog).getButton(AlertDialog.BUTTON_POSITIVE);
                 b.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View view){
                         String newNum = input.getText().toString();
                         if(newNum.length() != 10){
+                            Toast.makeText(UartActivity.this, "Entered number is invalid.",
+                                    Toast.LENGTH_SHORT).show();
                                 //DONT DISMISS IF INVALID
                         }
                         else {
@@ -844,6 +863,7 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
 
                 final UartDataChunk dataChunk = new UartDataChunk(System.currentTimeMillis(), UartDataChunk.TRANSFERMODE_RX, bytes);
                 mDataBuffer.add(dataChunk);
+                //TODO check the data we're getting, confirm it's the thing we send on motion detect, maybe make a runnable for sending messages?
 
                 runOnUiThread(new Runnable() {
                     @Override
