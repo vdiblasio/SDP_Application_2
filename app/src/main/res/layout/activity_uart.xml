@@ -69,8 +69,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="80dp"
-        android:layout_marginBottom="35dp"
         android:layout_above="@id/sendLayout"
         android:layout_alignParentTop="true"
         android:orientation="vertical">
@@ -78,39 +76,49 @@
           android:layout_below="@id/headerLayout"
           android:layout_marginTop="10dp"
           !-->
-        <ListView
-            android:id="@+id/bufferListView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#cccccc"
-            android:visibility="gone"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#cccccc">
+
             <RelativeLayout
+                android:id="@+id/phoneNumberDisplay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5sp"
-                android:id="@+id/phoneNumberDisplay">
+                android:padding="5sp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:textStyle="bold"
                     android:text="Active Phone Number"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/activePhoneNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text=""
-                    android:textSize="20sp"/>
-            </RelativeLayout>
+                    android:text="8888888888"
+                    android:textSize="20sp" />
 
+                <Button
+                    android:id="@+id/viewMessageLog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/activePhoneNumber"
+                    android:text="View/Hide Message Log" />
+            </RelativeLayout>
+            <ListView
+                android:id="@+id/bufferListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#999999"
+                android:layout_below="@id/phoneNumberDisplay"
+                android:visibility="invisible"/>
         </RelativeLayout>
 
         <EditText
