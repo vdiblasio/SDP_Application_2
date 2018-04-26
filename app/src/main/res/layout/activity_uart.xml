@@ -118,7 +118,7 @@
                 android:layout_below="@id/phoneNumberDisplay"
                 android:orientation="vertical"
                 android:background="#999999"
-                android:visibility="visible">
+                android:visibility="invisible">
 
                 <ListView
                     android:id="@+id/bufferListView"
@@ -193,7 +193,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         app:srcCompat="@color/colorBlack"
-        android:visibility="invisible"
+        android:visibility="visible"
         android:onClick="imageViewClick"/>
 
 </RelativeLayout>
