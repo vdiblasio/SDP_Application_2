@@ -111,14 +111,29 @@
                     android:layout_below="@id/activePhoneNumber"
                     android:text="View/Hide Message Log" />
             </RelativeLayout>
-            <ListView
-                android:id="@+id/bufferListView"
+            <LinearLayout
+                android:id="@+id/messageLog"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="#999999"
                 android:layout_below="@id/phoneNumberDisplay"
-                android:visibility="invisible"/>
+                android:orientation="vertical"
+                android:background="#999999"
+                android:visibility="visible">
+
+                <ListView
+                    android:id="@+id/bufferListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_below="@id/phoneNumberDisplay"/>
+                <Button
+                    android:id="@+id/clearLog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#cccccc"
+                    android:text="CLEAR LOG"/>
+
+            </LinearLayout>
         </RelativeLayout>
 
         <EditText
@@ -178,7 +193,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         app:srcCompat="@color/colorBlack"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:onClick="imageViewClick"/>
 
 </RelativeLayout>

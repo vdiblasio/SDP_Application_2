@@ -39,6 +39,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -100,6 +101,8 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
     private TextView mActivePhoneNumber;                //textview for number display
     private RelativeLayout mPhoneNumberDisplay;         //holds textview for active number and title
     private Button mViewMessaageLog;
+    private Button mClearLog;
+    private LinearLayout mMessageLog;
 
     // UI TextBuffer (refreshing the text buffer is managed with a timer because a lot of changes can arrive really fast and could stall the main thread)
     private Handler mUIRefreshTimerHandler = new Handler();
@@ -187,17 +190,9 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
 
         //setting up the 'display log' button
         mViewMessaageLog = (Button) findViewById(R.id.viewMessageLog);
-        mViewMessaageLog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mViewMessaageLog.getVisibility() == View.VISIBLE){
-                    mViewMessaageLog.setVisibility(View.INVISIBLE);
-                }
-                else{
-                    mViewMessaageLog.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+        mClearLog = (Button) findViewById(R.id.clearLog);
+        mMessageLog = (LinearLayout) findViewById(R.id.messageLog);
+
 
         mActivePhoneNumber = (TextView) findViewById(R.id.activePhoneNumber);
         mPhoneNumberDisplay = (RelativeLayout) findViewById(R.id.phoneNumberDisplay);
@@ -267,6 +262,27 @@ public class UartActivity extends UartInterfaceActivity implements MqttManager.M
             @Override
             public void onClick(View v) {
                 dialog.show();
+            }
+        });
+
+        mViewMessaageLog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mMessageLog.getVisibility() == View.VISIBLE){
+                    mMessageLog.setVisibility(View.INVISIBLE);
+                }
+                else{
+                    mMessageLog.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        //set listener for clear log button
+        mClearLog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBufferListAdapter.clear();
+                mBufferListAdapter.notifyDataSetChanged();
             }
         });
 
